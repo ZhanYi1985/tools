@@ -1,0 +1,201 @@
+set nocompatible
+
+" 以下内容手动添加
+set encoding=utf-8
+set fileencodings=utf-8,chinese,latin-1,cp936
+if has("win32")
+set fileencoding=chinese
+else
+set fileencoding=utf-8
+endif
+"解决consle输出乱码
+language messages zh_CN.utf-8
+
+"Toggle Menu and Toolbar
+set guioptions-=m
+set guioptions-=T
+map <silent> <F2> :
+if &guioptions =~# 'T' 
+set guioptions-=T
+set guioptions-=m
+else
+set guioptions =T
+set guioptions =m
+endif
+
+" 行号
+set number
+" 配色方案
+" colorscheme desert
+colorscheme torte
+" tab
+set tabstop=4
+set shiftwidth=4
+
+if &t_Co > 1
+   syntax enable
+endif
+
+
+" 字体
+set guifont=Inconsolata:h12:cANSI
+set gfw=幼圆:h10.5:cGB2312
+
+" 无备份
+set nobackup
+
+set nocp
+filetype plugin on
+
+"" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+"" Use neocomplcache.
+let g:neocomplcache_enable_at_startup = 0
+"" Use smartcase.
+"let g:neocomplcache_enable_smart_case = 1
+"" Use camel case completion.
+"let g:neocomplcache_enable_camel_case_completion = 1
+"" Use underbar completion.
+"let g:neocomplcache_enable_underbar_completion = 1
+"" Set minimum syntax keyword length.
+"let g:neocomplcache_min_syntax_length = 3
+"let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+"let g:neocomplcache_max_menu_width = 30
+"
+"let g:neocomplcache_fuzzy_completion_start_length = 3
+"let g:neocomplcache_enable_fuzzy_completion = 1
+"let g:neocomplcache_enable_auto_select = 1
+
+" C-Support
+let g:C_Styles = { '*.c,*.h' : 'C', '*.cc,*.cpp,*.c++,*.C,*.hh,*.hpp,*.h++,*.H' : 'CPP' }
+
+" recreate tags file with F5
+map <F5> :!ctags -R .<CR>
+
+
+" default tags
+set tags=$HOME/.tags;
+
+" MiniBufferExplorer
+let g:miniBufExplMapCTabSwitchBufs = 1
+let g:miniBufExplMapWindowNavVim = 1
+
+" C support
+let g:alternateNoDefaultAlternate = 1
+
+" TagList
+let Tlist_Exit_OnlyWindow=1
+nnoremap <silent> <F8> :TlistToggle<CR>
+
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+set rtp+=~/.vim/bundle/Vundle.vim
+let path='~/.vim/bundle'
+call vundle#begin(path)
+
+"Bundle 'klen/python-mode'
+"Bundle 'pythoncomplete.vim'
+
+Bundle 'Lokaltog/vim-easymotion'
+
+Bundle 'bling/vim-airline'
+Bundle 'scrooloose/nerdtree'
+Bundle 'scrooloose/syntastic'
+
+Bundle 'terryma/vim-multiple-cursors'
+
+Bundle 'tpope/vim-commentary'
+
+
+" Bundle 'terryma/vim-expand-region'
+
+Bundle 'DoxygenToolkit.vim'
+Bundle 'CCTree'  
+Bundle 'xml.vim'  
+Bundle 'c.vim'  
+Plugin 'Valloric/YouCompleteMe'
+
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+noremap <silent> <Left> :bp<CR>
+noremap <silent> <Right> :bn<CR>
+
+
+let g:EasyMotion_leader_key='f'
+
+
+
+
+let g:syntastic_check_on_open = 1
+let g:syntastic_cpp_include_dirs = ['/usr/include/','/home/zhanyi/include/','./include','../include', '/usr/include/c++/4.4.7' ]
+let g:syntastic_cpp_remove_include_errors = 1
+let g:syntastic_cpp_check_header = 1
+let g:syntastic_enable_balloons = 1
+let g:syntastic_c_include_dirs = ['/usr/include/','/home/zhanyi/include/','./include','../include' ]
+let g:syntastic_c_pc_lint_args = "-w5 -I/usr/include/linux -I/home/zhanyi/include -I./include -I../include "
+let g:syntastic_c_pc_lint_tail = "2>/dev/null"
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" configuration for YCM {
+let g:ycm_confirm_extra_conf=0
+let g:ycm_min_num_of_chars_for_completion=1
+let g:ycm_seed_identifiers_with_syntax=1
+let g:ycm_cache_omnifunc=0
+
+inoremap <leader>; <C-x><C-o>
+nnoremap <leader>jd :YcmCompleter GoTo<CR>
+nnoremap <leader>jda :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>jdd :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>jp :YcmCompleter GetParent<CR>
+
+" }
+
+""""""""""""""""""""""""""""""
+" airline
+""""""""""""""""""""""""""""""
+let g:airline_left_sep=''
+let g:airline_right_sep=''
+let g:airline_theme             = 'powerlineish'
+" let g:airline_enable_branch     = 1
+" let g:airline_enable_syntastic  = 1
+
+" vim-powerline symbols
+" let g:airline_left_sep          = '?'
+" let g:airline_left_alt_sep      = '?'
+" let g:airline_right_sep         = '?'
+" let g:airline_right_alt_sep     = '?'
+" let g:airline_branch_prefix     = '?'
+" let g:airline_readonly_symbol   = '?'
+" let g:airline_linecolumn_prefix = '?'
+
+set lazyredraw
+
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+map <C-n> :NERDTreeToggle<CR>
+
+nmap <BS> gcc
+vmap <BS> gc
+
+" :set syntax=cpp.doxygen
+
+
+" expand
+" map K <Plug>(expand_region_expand)
+" map J <Plug>(expand_region_shrink)
+
+
+
+
+
