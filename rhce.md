@@ -2,10 +2,9 @@
 
 # SELinux
 
-public_content_t nfs
-httpd_sys_content_t httpd
-
-
+* public_content_t public_content_rw_t nfs
+* httpd_sys_content_t httpd
+* samba_share_t samba
 
 ## null client mail
 
@@ -66,15 +65,16 @@ service:
 
 others:
 
-man 8 cifs
+* man 8 cifs
+* smb.conf
 
-smb.conf
-
+```
  path = /devops
         hosts allow = 172.25.0.
         writable = no
         browseable = yes
         write list = ldapuser2
+```
 
 
 //172.24.X.11/devops /mnt/dev cifs defaults,multiuser,username=silene,password=redhat,sec=ntlmssp 0 0
@@ -83,3 +83,31 @@ smb.conf
 
 * system1:/public  /mnt/nfsmount  nfs  defaults,sec=sys,sync 0 0
 * system1:/protected /mnt/nfssecure nfs defaults,sec=krb5p,sync,v4.2 0 0
+
+
+## autofs
+
+* yum install -y autofs
+* /home/ldap /etc/auto.ldap
+* ‐rw,sync,soft server.group8.example.com:/rhome/&
+
+* systemctl enable autofs
+* systemctl start autofs
+
+## httpd
+
+* VirtualHost, Directory
+* RequireAll
+* Require all granted, Require all denied, Require not host .example.com
+* WSGIScriptAlias / /var/www/html/webinfo.wsgi
+* semanage port -a -t http_port_t -p tcp <port>  selinux 将端口认为http放行。
+* semanage fcontext -a -t httpd_sys_content_t '/var/www/virtual(/.*)?'
+
+## 启动
+
+grub2‐editenv list
+
+## 应急模式
+
+* systemd.unit=emergency.target
+* mount -oremount,rw /
